@@ -1,0 +1,49 @@
+{
+  "name": "strapi-plugin-wysiwsg-react-md-editor",
+  "version": "1.0.0-beta.1",
+  "description": "This is a strapi rich text editor plugin using react md editor.",
+  "files": [
+    "admin",
+    "config",
+    "controllers",
+    "services"
+  ],
+  "strapi": {
+    "name": "wysiwsg-react-md-editor",
+    "icon": "plug",
+    "description": "This is a strapi rich text editor plugin using react md editor.",
+  },
+  "dependencies": {
+    "@uiw/react-md-editor": "^2.0.3"
+  },
+  "author": {
+    "name": "Kwinten",
+    "email": "kwinten.yc.li@gmail.com",
+    "url": "https://github.com/kwinyyyc"
+  },
+  "maintainers": [
+    {
+      "name": "Kwinten",
+      "email": "kwinten.yc.li@gmail.com",
+      "url": "https://github.com/kwinyyyc"
+    }
+  ],
+  "engines": {
+    "node": ">=10.16.0 <=14.x.x",
+    "npm": ">=6.0.0"
+  },
+  "keywords": [
+    "strapi",
+    "plugins",
+    "rich text editor"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kwinyyyc/strapi-plugin-wysiwsg-react-md-editor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kwinyyyc/strapi-plugin-wysiwsg-react-md-editor/issues"
+  },
+  "homepage": "https://github.com/kwinyyyc/strapi-plugin-wysiwsg-react-md-editor#readme"
+}
