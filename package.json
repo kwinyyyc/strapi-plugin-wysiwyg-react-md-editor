@@ -1,20 +1,17 @@
 {
   "name": "strapi-plugin-wysiwsg-react-md-editor",
-  "version": "1.0.3",
+  "version": "4.0.0",
   "description": "This is a strapi rich text editor plugin using react md editor.",
-  "files": [
-    "admin",
-    "config",
-    "controllers",
-    "services"
-  ],
   "strapi": {
     "name": "wysiwsg-react-md-editor",
     "icon": "plug",
-    "description": "This is a strapi rich text editor plugin using react md editor."
+    "description": "This is a strapi rich text editor plugin using react md editor.",
+    "required": false,
+    "kind": "plugin"
   },
   "dependencies": {
-    "@uiw/react-md-editor": "^2.0.3"
+    "@uiw/react-md-editor": "2.1.11",
+    "styled-components": "^5.3.3"
   },
   "author": {
     "name": "Kwinten",
@@ -29,7 +26,7 @@
     }
   ],
   "engines": {
-    "node": ">=10.16.0 <=14.x.x",
+    "node": ">=12.x.x",
     "npm": ">=6.0.0"
   },
   "keywords": [

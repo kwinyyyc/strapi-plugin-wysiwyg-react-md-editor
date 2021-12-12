@@ -32,13 +32,13 @@ const Editor = ({ onChange, name, value }) => {
   return (
     <Wrapper>
       <MDEditor
-        value={value}
+        value={value || ""}
         onChange={(newValue) => {
-          onChange({ target: { name, value: newValue } });
+          onChange({ target: { name, value: newValue || ""} });
         }}
       />
       <div style={{ padding: '50px 0 0 0' }} />
-      <MDEditor.Markdown source={value} />
+      <MDEditor.Markdown source={value || ""} />
     </Wrapper>
   );
 };
