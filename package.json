@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-wysiwsg-react-md-editor",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "This is a strapi rich text editor plugin using react md editor.",
   "strapi": {
     "name": "wysiwsg-react-md-editor",
