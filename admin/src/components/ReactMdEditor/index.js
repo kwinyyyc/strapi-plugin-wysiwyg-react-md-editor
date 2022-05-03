@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import MDEditor, { commands } from "@uiw/react-md-editor";
 import MediaLib from "../MediaLib";
 import styled from "styled-components";
+import "@uiw/react-markdown-preview/dist/markdown.css";
 import "@uiw/react-md-editor/dist/markdown-editor.css";
 
 const Wrapper = styled.div`
@@ -15,6 +16,12 @@ const Wrapper = styled.div`
     }
     .w-md-editor-preview {
       display: block;
+      strong {
+        font-weight: bold;
+      }
+      em {
+        font-style: italic;
+      }
     }
   }
   .w-md-editor-content {
