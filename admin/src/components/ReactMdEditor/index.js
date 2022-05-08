@@ -7,7 +7,20 @@ import "@uiw/react-markdown-preview/dist/markdown.css";
 import "@uiw/react-md-editor/dist/markdown-editor.css";
 
 const Wrapper = styled.div`
+  > div:nth-child(2) {
+    display: none;
+  }
+  .w-md-editor-bar {
+    display: none;
+  }
   .w-md-editor {
+    border: 1px solid #dcdce4;
+    border-radius: 4px;
+    box-shadow: none;
+    &:focus-within {
+      border: 1px solid #4945ff;
+      box-shadow: #4945ff 0px 0px 0px 2px;
+    }
     min-height: 400px;
     display: flex;
     flex-direction: column;
