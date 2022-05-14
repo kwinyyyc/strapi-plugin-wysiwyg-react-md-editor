@@ -5,6 +5,10 @@ import MediaLib from "../MediaLib";
 import styled from "styled-components";
 import "@uiw/react-markdown-preview/dist/markdown.css";
 import "@uiw/react-md-editor/dist/markdown-editor.css";
+import { Stack } from "@strapi/design-system/Stack";
+import { Box } from "@strapi/design-system/Box";
+import { Typography } from "@strapi/design-system/Typography";
+import { useIntl } from "react-intl";
 
 const Wrapper = styled.div`
   > div:nth-child(2) {
@@ -48,7 +52,17 @@ const Wrapper = styled.div`
   }
 `;
 
-const Editor = ({ onChange, name, value }) => {
+const Editor = ({
+  name,
+  onChange,
+  value,
+  intlLabel,
+  disabled,
+  error,
+  description,
+  required,
+}) => {
+  const { formatMessage } = useIntl();
   const [mediaLibVisible, setMediaLibVisible] = useState(false);
 
   const handleToggleMediaLib = () => setMediaLibVisible((prev) => !prev);
@@ -70,57 +84,78 @@ const Editor = ({ onChange, name, value }) => {
     handleToggleMediaLib();
   };
   return (
-    <Wrapper>
-      <MDEditor
-        commands={[
-          commands.title,
-          commands.bold,
-          commands.codeBlock,
-          commands.italic,
-          commands.strikethrough,
-          commands.hr,
-          commands.group,
-          commands.divider,
-          commands.link,
-          commands.quote,
-          commands.code,
-          {
-            name: "image",
-            keyCommand: "image",
-            buttonProps: { "aria-label": "Insert title3" },
-            icon: (
-              <svg width="12" height="12" viewBox="0 0 20 20">
-                <path
-                  fill="currentColor"
-                  d="M15 9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4-7H1c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 13l-6-5-2 2-4-5-4 8V4h16v11z"
-                ></path>
-              </svg>
-            ),
-            execute: (state, api) => {
-              handleToggleMediaLib();
+    <Stack size={1}>
+      <Box>
+        <Typography variant="pi" fontWeight="bold">
+          {formatMessage(intlLabel)}
+        </Typography>
+        {required && (
+          <Typography variant="pi" fontWeight="bold" textColor="danger600">
+            *
+          </Typography>
+        )}
+      </Box>
+      <Wrapper>
+        <MDEditor
+          disabled={disabled}
+          commands={[
+            commands.title,
+            commands.bold,
+            commands.codeBlock,
+            commands.italic,
+            commands.strikethrough,
+            commands.hr,
+            commands.group,
+            commands.divider,
+            commands.link,
+            commands.quote,
+            commands.code,
+            {
+              name: "image",
+              keyCommand: "image",
+              buttonProps: { "aria-label": "Insert title3" },
+              icon: (
+                <svg width="12" height="12" viewBox="0 0 20 20">
+                  <path
+                    fill="currentColor"
+                    d="M15 9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4-7H1c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 13l-6-5-2 2-4-5-4 8V4h16v11z"
+                  ></path>
+                </svg>
+              ),
+              execute: (state, api) => {
+                handleToggleMediaLib();
+              },
             },
-          },
-          commands.unorderedListCommand,
-          commands.orderedListCommand,
-          commands.checkedListCommand,
-          commands.codeEdit,
-          commands.codeLive,
-          commands.codePreview,
-          commands.fullscreen,
-        ]}
-        value={value || ""}
-        onChange={(newValue) => {
-          onChange({ target: { name, value: newValue || "" } });
-        }}
-      />
-      <div style={{ padding: "50px 0 0 0" }} />
-      <MDEditor.Markdown source={value || ""} />
-      <MediaLib
-        isOpen={mediaLibVisible}
-        onChange={handleChangeAssets}
-        onToggle={handleToggleMediaLib}
-      />
-    </Wrapper>
+            commands.unorderedListCommand,
+            commands.orderedListCommand,
+            commands.checkedListCommand,
+            commands.codeEdit,
+            commands.codeLive,
+            commands.codePreview,
+            commands.fullscreen,
+          ]}
+          value={value || ""}
+          onChange={(newValue) => {
+            onChange({ target: { name, value: newValue || "" } });
+          }}
+        />
+        <div style={{ padding: "50px 0 0 0" }} />
+        <MDEditor.Markdown source={value || ""} />
+        <MediaLib
+          isOpen={mediaLibVisible}
+          onChange={handleChangeAssets}
+          onToggle={handleToggleMediaLib}
+        />
+      </Wrapper>
+      {error && (
+        <Typography variant="pi" textColor="danger600">
+          {formatMessage({ id: error, defaultMessage: error })}
+        </Typography>
+      )}
+      {description && (
+        <Typography variant="pi">{formatMessage(description)}</Typography>
+      )}
+    </Stack>
   );
 };
 
