@@ -44,11 +44,17 @@ const Wrapper = styled.div`
   .w-md-editor-content {
     flex: 1 1 auto;
   }
+  .w-md-editor-fullscreen {
+    z-index: 3;
+  }
   .w-md-editor-text {
     margin: 0;
   }
   .wmde-markdown {
     display: none;
+  }
+  .w-md-editor-preview ol {
+    list-style: auto;
   }
 `;
 
@@ -64,22 +70,23 @@ const Editor = ({
 }) => {
   const { formatMessage } = useIntl();
   const [mediaLibVisible, setMediaLibVisible] = useState(false);
+  const [ mediaLibSelection, setMediaLibSelection ] = useState(-1);
 
   const handleToggleMediaLib = () => setMediaLibVisible((prev) => !prev);
 
   const handleChangeAssets = (assets) => {
     let newValue = value ? value : "";
-
     assets.map((asset) => {
       if (asset.mime.includes("image")) {
-        const imgTag = `![](${asset.url})`;
-
-        newValue = `${newValue}${imgTag}`;
+        const imgTag = ` ![](${asset.url}) `;
+        if (mediaLibSelection > -1){
+          newValue = value.substring(0,mediaLibSelection) + imgTag + value.substring(mediaLibSelection)
+        } else {
+          newValue = `${newValue}${imgTag}`;
+        }
       }
-
       // Handle videos and other type of files by adding some code
     });
-
     onChange({ target: { name, value: newValue || "" } });
     handleToggleMediaLib();
   };
@@ -99,7 +106,12 @@ const Editor = ({
         <MDEditor
           disabled={disabled}
           commands={[
-            commands.title,
+            commands.title2,
+            commands.title3,
+            commands.title4,
+            commands.title5,
+            commands.title6,
+            commands.divider,
             commands.bold,
             commands.codeBlock,
             commands.italic,
@@ -123,15 +135,18 @@ const Editor = ({
                 </svg>
               ),
               execute: (state, api) => {
+                setMediaLibSelection(state.selection.end);
                 handleToggleMediaLib();
               },
             },
             commands.unorderedListCommand,
             commands.orderedListCommand,
             commands.checkedListCommand,
+            commands.divider,
             commands.codeEdit,
             commands.codeLive,
             commands.codePreview,
+            commands.divider,
             commands.fullscreen,
           ]}
           value={value || ""}
