@@ -1,9 +1,9 @@
 {
-  "name": "strapi-plugin-wysiwsg-react-md-editor",
+  "name": "strapi-plugin-wysiwyg-react-md-editor",
   "version": "4.2.0",
   "description": "Replaces the default Strapi WYSIWYG editor with react md editor.",
   "strapi": {
-    "name": "wysiwsg-react-md-editor",
+    "name": "wysiwyg-react-md-editor",
     "icon": "plug",
     "displayName": "React MD Editor",
     "description": "Replaces the default Strapi WYSIWYG editor with react md editor.",
@@ -41,12 +41,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kwinyyyc/strapi-plugin-wysiwsg-react-md-editor.git"
+    "url": "git+https://github.com/kwinyyyc/strapi-plugin-wysiwyg-react-md-editor.git"
   },
   "bugs": {
-    "url": "https://github.com/kwinyyyc/strapi-plugin-wysiwsg-react-md-editor/issues"
+    "url": "https://github.com/kwinyyyc/strapi-plugin-wysiwyg-react-md-editor/issues"
   },
-  "homepage": "https://github.com/kwinyyyc/strapi-plugin-wysiwsg-react-md-editor#readme",
+  "homepage": "https://github.com/kwinyyyc/strapi-plugin-wysiwyg-react-md-editor#readme",
   "peerDependencies": {
     "@strapi/strapi": "^4.1.5"
   }
