@@ -70,7 +70,7 @@ const Editor = ({
 }) => {
   const { formatMessage } = useIntl();
   const [mediaLibVisible, setMediaLibVisible] = useState(false);
-  const [ mediaLibSelection, setMediaLibSelection ] = useState(-1);
+  const [mediaLibSelection, setMediaLibSelection] = useState(-1);
 
   const handleToggleMediaLib = () => setMediaLibVisible((prev) => !prev);
 
@@ -78,9 +78,12 @@ const Editor = ({
     let newValue = value ? value : "";
     assets.map((asset) => {
       if (asset.mime.includes("image")) {
-        const imgTag = ` ![](${asset.url}) `;
-        if (mediaLibSelection > -1){
-          newValue = value.substring(0,mediaLibSelection) + imgTag + value.substring(mediaLibSelection)
+        const imgTag = `<Image src="${asset.url})" />`;
+        if (mediaLibSelection > -1) {
+          newValue =
+            value.substring(0, mediaLibSelection) +
+            imgTag +
+            value.substring(mediaLibSelection);
         } else {
           newValue = `${newValue}${imgTag}`;
         }
