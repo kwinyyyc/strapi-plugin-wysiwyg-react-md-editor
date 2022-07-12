@@ -9,6 +9,7 @@ import { Stack } from "@strapi/design-system/Stack";
 import { Box } from "@strapi/design-system/Box";
 import { Typography } from "@strapi/design-system/Typography";
 import { useIntl } from "react-intl";
+import table from "./commands/table";
 
 const Wrapper = styled.div`
   > div:nth-child(2) {
@@ -152,64 +153,7 @@ const Editor = ({
             commands.codePreview,
             commands.divider,
             commands.fullscreen,
-            {
-              name: "table",
-              keyCommand: "table",
-              buttonProps: { "aria-label": "Insert table" },
-              icon: (
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10.875 1.875H1.125C0.917578 1.875 0.75 2.04258 0.75 2.25V9.75C0.75 9.95742 0.917578 10.125 1.125 10.125H10.875C11.0824 10.125 11.25 9.95742 11.25 9.75V2.25C11.25 2.04258 11.0824 1.875 10.875 1.875ZM10.4062 4.3125H7.92188V2.71875H10.4062V4.3125ZM10.4062 6.9375H7.92188V5.0625H10.4062V6.9375ZM4.82812 5.0625H7.17188V6.9375H4.82812V5.0625ZM7.17188 4.3125H4.82812V2.71875H7.17188V4.3125ZM1.59375 5.0625H4.07812V6.9375H1.59375V5.0625ZM1.59375 2.71875H4.07812V4.3125H1.59375V2.71875ZM1.59375 7.6875H4.07812V9.28125H1.59375V7.6875ZM4.82812 7.6875H7.17188V9.28125H4.82812V7.6875ZM10.4062 9.28125H7.92188V7.6875H10.4062V9.28125Z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
-              ),
-              children: ({ close, execute, getState, textApi }) => {
-                const rows = 5;
-                const columns = 5;
-
-                return (
-                  <div style={{ padding: 10 }}>
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplate: `repeat(${rows}, 16px) / repeat(${columns}, 16px)`,
-                      }}
-                    >
-                      {Array.from(Array(rows)).map((_, i) => {
-                        Array.from(Array(columns)).map((_, j) => {
-                          return (
-                            <div
-                              data-row={i}
-                              data-col={j}
-                              style={{
-                                borderLeft: "1px solid gray",
-                                borderTop: "1px solid gray",
-                                borderRight:
-                                  j === columns - 1
-                                    ? "1px solid gray"
-                                    : undefined,
-                                borderBottom:
-                                  i === rows - 1 ? "1px solid gray" : undefined,
-                              }}
-                            />
-                          );
-                        });
-                      })}
-                    </div>
-                  </div>
-                );
-              },
-              execute: (state, api) => {
-                console.log("hello");
-              },
-            },
+            commands.group([], table),
           ]}
           value={value || ""}
           onChange={(newValue) => {
