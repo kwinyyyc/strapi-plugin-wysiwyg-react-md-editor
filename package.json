@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-wysiwyg-react-md-editor",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "description": "Replaces the default Strapi WYSIWYG editor with react md editor.",
   "strapi": {
     "name": "wysiwyg-react-md-editor",
@@ -11,7 +11,7 @@
     "kind": "plugin"
   },
   "dependencies": {
-    "@uiw/react-md-editor": "2.1.11",
+    "@uiw/react-md-editor": "^3.20",
     "styled-components": "^5.3.3"
   },
   "author": {

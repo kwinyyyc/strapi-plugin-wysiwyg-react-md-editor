@@ -4,7 +4,7 @@ import MDEditor, { commands } from "@uiw/react-md-editor";
 import MediaLib from "../MediaLib";
 import styled from "styled-components";
 import "@uiw/react-markdown-preview/dist/markdown.css";
-import "@uiw/react-md-editor/dist/markdown-editor.css";
+import "@uiw/react-md-editor/dist/mdeditor.min.css";
 import { Stack } from "@strapi/design-system/Stack";
 import { Box } from "@strapi/design-system/Box";
 import { Typography } from "@strapi/design-system/Typography";
@@ -50,9 +50,6 @@ const Wrapper = styled.div`
   .w-md-editor-text {
     margin: 0;
   }
-  .wmde-markdown {
-    display: none;
-  }
   .w-md-editor-preview ol {
     list-style: auto;
   }
@@ -70,7 +67,7 @@ const Editor = ({
 }) => {
   const { formatMessage } = useIntl();
   const [mediaLibVisible, setMediaLibVisible] = useState(false);
-  const [ mediaLibSelection, setMediaLibSelection ] = useState(-1);
+  const [mediaLibSelection, setMediaLibSelection] = useState(-1);
 
   const handleToggleMediaLib = () => setMediaLibVisible((prev) => !prev);
 
@@ -79,8 +76,11 @@ const Editor = ({
     assets.map((asset) => {
       if (asset.mime.includes("image")) {
         const imgTag = ` ![](${asset.url}) `;
-        if (mediaLibSelection > -1){
-          newValue = value.substring(0,mediaLibSelection) + imgTag + value.substring(mediaLibSelection)
+        if (mediaLibSelection > -1) {
+          newValue =
+            value.substring(0, mediaLibSelection) +
+            imgTag +
+            value.substring(mediaLibSelection);
         } else {
           newValue = `${newValue}${imgTag}`;
         }
@@ -90,6 +90,7 @@ const Editor = ({
     onChange({ target: { name, value: newValue || "" } });
     handleToggleMediaLib();
   };
+
   return (
     <Stack size={1}>
       <Box>
@@ -142,12 +143,6 @@ const Editor = ({
             commands.unorderedListCommand,
             commands.orderedListCommand,
             commands.checkedListCommand,
-            commands.divider,
-            commands.codeEdit,
-            commands.codeLive,
-            commands.codePreview,
-            commands.divider,
-            commands.fullscreen,
           ]}
           value={value || ""}
           onChange={(newValue) => {
@@ -155,7 +150,6 @@ const Editor = ({
           }}
         />
         <div style={{ padding: "50px 0 0 0" }} />
-        <MDEditor.Markdown source={value || ""} />
         <MediaLib
           isOpen={mediaLibVisible}
           onChange={handleChangeAssets}
