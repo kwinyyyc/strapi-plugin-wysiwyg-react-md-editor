@@ -67,7 +67,7 @@ const Editor = ({
 }) => {
   const { formatMessage } = useIntl();
   const [mediaLibVisible, setMediaLibVisible] = useState(false);
-  const [ mediaLibSelection, setMediaLibSelection ] = useState(-1);
+  const [mediaLibSelection, setMediaLibSelection] = useState(-1);
 
   const handleToggleMediaLib = () => setMediaLibVisible((prev) => !prev);
 
@@ -76,8 +76,11 @@ const Editor = ({
     assets.map((asset) => {
       if (asset.mime.includes("image")) {
         const imgTag = ` ![](${asset.url}) `;
-        if (mediaLibSelection > -1){
-          newValue = value.substring(0,mediaLibSelection) + imgTag + value.substring(mediaLibSelection)
+        if (mediaLibSelection > -1) {
+          newValue =
+            value.substring(0, mediaLibSelection) +
+            imgTag +
+            value.substring(mediaLibSelection);
         } else {
           newValue = `${newValue}${imgTag}`;
         }
@@ -87,6 +90,11 @@ const Editor = ({
     onChange({ target: { name, value: newValue || "" } });
     handleToggleMediaLib();
   };
+
+  React.useEffect(() => {
+    document.documentElement.setAttribute("data-color-mode", "light");
+  }, []);
+
   return (
     <Stack size={1}>
       <Box>
