@@ -91,10 +91,6 @@ const Editor = ({
     handleToggleMediaLib();
   };
 
-  React.useEffect(() => {
-    document.documentElement.setAttribute("data-color-mode", "light");
-  }, []);
-
   return (
     <Stack size={1}>
       <Box>
