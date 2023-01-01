@@ -8,3 +8,6 @@ package-lock.json
 .DS_Store
 npm-debug.log
 .idea
+
+# admin/src/components/ReactMdEditor/*
+# !admin/src/components/ReactMdEditor/index.js
