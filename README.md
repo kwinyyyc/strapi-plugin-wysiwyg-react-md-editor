@@ -12,3 +12,10 @@ With yarn:
    With npm:
 
    `npm install strapi-plugin-wysiwyg-react-md-editor`
+
+## Make it work
+
+```sh
+$ yarn build
+$ yarn run develop
+```
