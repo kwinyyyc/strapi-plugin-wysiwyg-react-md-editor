@@ -11,7 +11,7 @@
     "kind": "plugin"
   },
   "dependencies": {
-    "@uiw/react-md-editor": "2.1.11",
+    "@uiw/react-md-editor": "^3.20",
     "styled-components": "^5.3.3"
   },
   "author": {
