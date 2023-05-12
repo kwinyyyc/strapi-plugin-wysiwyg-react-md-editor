@@ -75,7 +75,7 @@ const Editor = ({
     let newValue = value ? value : "";
     assets.map((asset) => {
       if (asset.mime.includes("image")) {
-        const imgTag = ` ![](${asset.url}) `;
+        const imgTag = ` ![${asset.alt}](${asset.url}) `;
         if (mediaLibSelection > -1) {
           newValue =
             value.substring(0, mediaLibSelection) +
