@@ -74,19 +74,24 @@ const Editor = ({
     let newValue = value ? value : "";
     assets.map((asset) => {
       if (asset.mime.includes("image")) {
-        const imgTag = ` ![${asset.alt}](${asset.url}) `;
+        const imgTag = `![${asset.alt}](${asset.url})`;
         if (mediaLibSelection > -1) {
-          newValue =
-            value.substring(0, mediaLibSelection) +
-            imgTag +
-            value.substring(mediaLibSelection);
+          const preValue = value?.substring(0, mediaLibSelection) ?? "";
+          const postValue = value?.substring(mediaLibSelection) ?? "";
+          newValue = `${
+            preValue && !preValue.endsWith(" ") ? preValue + " " : preValue
+          }${imgTag}${
+            postValue && !postValue.startsWith(" ")
+              ? " " + postValue
+              : postValue
+          }`;
         } else {
           newValue = `${newValue}${imgTag}`;
         }
       }
       // Handle videos and other type of files by adding some code
     });
-    onChange({ target: { name, value: newValue || "" } });
+    onChange({ target: { name, value: newValue ?? "" } });
     handleToggleMediaLib();
   };
 
