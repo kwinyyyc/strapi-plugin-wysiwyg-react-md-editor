@@ -11,8 +11,8 @@
     "kind": "plugin"
   },
   "dependencies": {
-    "@uiw/react-md-editor": "^3.20",
-    "styled-components": "^5.3.3"
+    "@uiw/react-md-editor": "^4.0.0",
+    "styled-components": "^6.1.1"
   },
   "author": {
     "name": "Kwinten",
