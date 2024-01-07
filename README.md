@@ -4,6 +4,43 @@ This is a [strapi](https://github.com/strapi/strapi) rich text editor plugin bas
 
 ![](screenshot.png)
 
+## Customizing the toolbar commands
+Default it uses below commands in sequence:
+`[
+    "title2",
+    "title3",
+    "title4",
+    "title5",
+    "title6",
+    "divider",
+    "bold",
+    "codeBlock",
+    "italic",
+    "strikethrough",
+    "hr",
+    "group",
+    "divider",
+    "link",
+    "quote",
+    "code",
+    "unorderedListCommand",
+    "orderedListCommand",
+    "checkedListCommand",
+    "strapiMediaLibrary"
+]`
+
+You can customize the value in plugins/config.ts file.
+```json
+export default {
+    "wysiwyg-react-md-editor": {
+        enabled: true,
+        config: {
+            toolbarCommands: ["title1", "strapiMediaLibrary"],
+        },
+    }
+}
+```
+
 ## Get started
 With yarn:
 
@@ -19,3 +56,4 @@ With yarn:
 $ yarn build
 $ yarn run develop
 ```
+

@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-wysiwyg-react-md-editor",
-  "version": "4.4.1",
+  "version": "4.5.0",
   "description": "Replaces the default Strapi WYSIWYG editor with react md editor.",
   "strapi": {
     "name": "wysiwyg-react-md-editor",
@@ -12,7 +12,32 @@
   },
   "dependencies": {
     "@uiw/react-md-editor": "^4.0.0",
-    "styled-components": "^6.1.1"
+    "styled-components": "^6.1.1",
+    "@strapi/design-system": "^1.6.3",
+    "@strapi/helper-plugin": "^4.6.0",
+    "@strapi/icons": "^1.6.3",
+    "prop-types": "^15.7.2"
+  },
+  "devDependencies": {
+    "@strapi/strapi": "4.9.2",
+    "@strapi/typescript-utils": "^4.6.0",
+    "@types/react": "^17.0.53",
+    "@types/react-dom": "^18.0.28",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/styled-components": "^5.1.26",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^5.3.4",
+    "rimraf": "^5.0.5",
+    "styled-components": "^5.3.6",
+    "typescript": "5.0.4"
+  },
+  "peerDependencies": {
+    "@strapi/strapi": "4.9.2",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0",
+    "react-router-dom": "^5.2.0",
+    "styled-components": "^5.2.1"
   },
   "author": {
     "name": "Kwinten",
@@ -27,7 +52,7 @@
     }
   ],
   "engines": {
-    "node": ">=12.x.x",
+    "node": ">=18.0.0 <=20.x.x",
     "npm": ">=6.0.0"
   },
   "keywords": [
@@ -35,10 +60,6 @@
     "plugins",
     "rich text editor"
   ],
-  "license": "MIT",
-  "resolutions": {
-    "prismjs": "1.27.0"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kwinyyyc/strapi-plugin-wysiwyg-react-md-editor.git"
@@ -47,12 +68,11 @@
     "url": "https://github.com/kwinyyyc/strapi-plugin-wysiwyg-react-md-editor/issues"
   },
   "homepage": "https://github.com/kwinyyyc/strapi-plugin-wysiwyg-react-md-editor#readme",
-  "peerDependencies": {
-    "@strapi/plugin-graphql": "4.9.2",
-    "@strapi/strapi": "4.9.2"
+  "scripts": {
+    "prepack": "yarn build",
+    "develop": "tsc -p tsconfig.server.json -w",
+    "clean": "rimraf dist",
+    "build": "yarn clean && tsc -p tsconfig.server.json"
   },
-  "devDependencies": {
-    "@strapi/plugin-graphql": "4.9.2",
-    "@strapi/strapi": "4.9.2"
-  }
+  "license": "MIT"
 }

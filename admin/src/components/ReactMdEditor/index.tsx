@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 import MDEditor, { commands } from "@uiw/react-md-editor";
 import MediaLib from "../MediaLib";
@@ -8,6 +8,8 @@ import { Stack } from "@strapi/design-system/Stack";
 import { Box } from "@strapi/design-system/Box";
 import { Typography } from "@strapi/design-system/Typography";
 import { useIntl } from "react-intl";
+import pluginId from "../../pluginId";
+import { ICommand } from "@uiw/react-md-editor";
 
 const Wrapper = styled.div`
   > div:nth-child(2) {
@@ -95,6 +97,65 @@ const Editor = ({
     handleToggleMediaLib();
   };
 
+  const [configs, setConfigs] = useState<{ toolbarCommands?: string[] }>({});
+
+  const toolbarCommands: ICommand[] = useMemo(() => {
+    const strapiMediaLibrary = {
+      name: "image",
+      keyCommand: "image",
+      buttonProps: { "aria-label": "Insert title3" },
+      icon: (
+        <svg width="12" height="12" viewBox="0 0 20 20">
+          <path
+            fill="currentColor"
+            d="M15 9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4-7H1c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 13l-6-5-2 2-4-5-4 8V4h16v11z"
+          ></path>
+        </svg>
+      ),
+      execute: (state, api) => {
+        setMediaLibSelection(state.selection.end);
+        handleToggleMediaLib();
+      },
+    };
+    if (!configs?.toolbarCommands) {
+      return [
+        commands.title2,
+        commands.title3,
+        commands.title4,
+        commands.title5,
+        commands.title6,
+        commands.divider,
+        commands.bold,
+        commands.codeBlock,
+        commands.italic,
+        commands.strikethrough,
+        commands.hr,
+        commands.group,
+        commands.divider,
+        commands.link,
+        commands.quote,
+        commands.code,
+        strapiMediaLibrary,
+        commands.unorderedListCommand,
+        commands.orderedListCommand,
+        commands.checkedListCommand,
+      ];
+    }
+    const customCommands = configs?.toolbarCommands?.map((config) => {
+      if (config === "strapiMediaLibrary") return strapiMediaLibrary;
+      if (commands[config]) return commands[config];
+    });
+    return customCommands;
+  }, [JSON.stringify(configs)]);
+
+  useEffect(() => {
+    fetch(`/${pluginId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setConfigs(data);
+      });
+  }, []);
+
   return (
     <Stack size={1}>
       <Box>
@@ -110,44 +171,7 @@ const Editor = ({
       <Wrapper>
         <MDEditor
           disabled={disabled}
-          commands={[
-            commands.title2,
-            commands.title3,
-            commands.title4,
-            commands.title5,
-            commands.title6,
-            commands.divider,
-            commands.bold,
-            commands.codeBlock,
-            commands.italic,
-            commands.strikethrough,
-            commands.hr,
-            commands.group,
-            commands.divider,
-            commands.link,
-            commands.quote,
-            commands.code,
-            {
-              name: "image",
-              keyCommand: "image",
-              buttonProps: { "aria-label": "Insert title3" },
-              icon: (
-                <svg width="12" height="12" viewBox="0 0 20 20">
-                  <path
-                    fill="currentColor"
-                    d="M15 9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4-7H1c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 13l-6-5-2 2-4-5-4 8V4h16v11z"
-                  ></path>
-                </svg>
-              ),
-              execute: (state, api) => {
-                setMediaLibSelection(state.selection.end);
-                handleToggleMediaLib();
-              },
-            },
-            commands.unorderedListCommand,
-            commands.orderedListCommand,
-            commands.checkedListCommand,
-          ]}
+          commands={toolbarCommands}
           value={value || ""}
           onChange={(newValue) => {
             onChange({ target: { name, value: newValue || "" } });
