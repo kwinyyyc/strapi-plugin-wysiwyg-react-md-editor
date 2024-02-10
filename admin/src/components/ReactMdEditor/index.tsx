@@ -46,7 +46,7 @@ const Wrapper = styled.div`
     flex: 1 1 auto;
   }
   .w-md-editor-fullscreen {
-    z-index: 3;
+    z-index: 4;
   }
   .w-md-editor-text {
     margin: 0;
