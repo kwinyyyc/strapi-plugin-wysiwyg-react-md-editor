@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-wysiwyg-react-md-editor",
-  "version": "4.5.2",
+  "version": "4.5.3",
   "description": "Replaces the default Strapi WYSIWYG editor with react md editor.",
   "strapi": {
     "name": "wysiwyg-react-md-editor",
@@ -33,7 +33,7 @@
     "typescript": "5.0.4"
   },
   "peerDependencies": {
-    "@strapi/strapi": "4.9.2",
+    "@strapi/strapi": "^4.9.2",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0",
     "react-router-dom": "^5.2.0",
