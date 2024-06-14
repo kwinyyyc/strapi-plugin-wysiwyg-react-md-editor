@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@uiw/react-md-editor": "^4.0.0",
-    "styled-components": "^6.1.1",
+    "styled-components": "^6.1.11",
     "@strapi/design-system": "^1.6.3",
     "@strapi/helper-plugin": "^4.6.0",
     "@strapi/icons": "^1.6.3",
@@ -29,7 +29,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^5.3.4",
     "rimraf": "^5.0.5",
-    "styled-components": "^5.3.6",
+    "styled-components": "^6.1.11",
     "typescript": "5.0.4"
   },
   "peerDependencies": {
