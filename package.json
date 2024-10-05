@@ -11,33 +11,33 @@
     "kind": "plugin"
   },
   "dependencies": {
-    "@uiw/react-md-editor": "^4.0.0",
-    "styled-components": "^6.1.1",
-    "@strapi/design-system": "^1.6.3",
-    "@strapi/helper-plugin": "^4.6.0",
-    "@strapi/icons": "^1.6.3",
-    "prop-types": "^15.7.2"
+    "@uiw/react-md-editor": "^4.0.0"
   },
   "devDependencies": {
-    "@strapi/strapi": "4.9.2",
-    "@strapi/typescript-utils": "^4.6.0",
+    "@strapi/icons": "2.0.0-rc.11",
+    "@strapi/sdk-plugin": "^5.2.6",
+    "@strapi/strapi": "^5.0.2",
+    "@strapi/typescript-utils": "^5.0.2",
     "@types/react": "^17.0.53",
     "@types/react-dom": "^18.0.28",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.26",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^5.3.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2",
     "rimraf": "^5.0.5",
-    "styled-components": "^5.3.6",
-    "typescript": "5.0.4"
+    "styled-components": "^6.1.13",
+    "typescript": "^5.6.0"
   },
   "peerDependencies": {
-    "@strapi/strapi": "^4.9.2",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0",
-    "react-router-dom": "^5.2.0",
-    "styled-components": "^5.2.1"
+    "@strapi/icons": "2.0.0-rc.11",
+    "@strapi/sdk-plugin": "^5.2.6",
+    "@strapi/strapi": "^5.0.2",
+    "@strapi/typescript-utils": "^5.0.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2",
+    "styled-components": "^6.1.13"
   },
   "author": {
     "name": "Kwinten",
@@ -51,10 +51,37 @@
       "url": "https://github.com/kwinyyyc"
     }
   ],
+  "contributors": [
+    {
+      "name": "John Mitchell-Grant",
+      "url": "https://github.com/johnmgrant"
+    }
+  ],
   "engines": {
     "node": ">=18.0.0 <=20.x.x",
     "npm": ">=6.0.0"
   },
+	"type": "commonjs",
+  "exports": {
+    "./package.json": "./package.json",
+    "./strapi-admin": {
+      "types": "./dist/admin/src/index.d.ts",
+      "source": "./admin/src/index.ts",
+      "import": "./dist/admin/index.mjs",
+      "require": "./dist/admin/index.js",
+      "default": "./dist/admin/index.js"
+    },
+    "./strapi-server": {
+      "types": "./dist/server/src/index.d.ts",
+      "source": "./server/src/index.ts",
+      "import": "./dist/server/index.mjs",
+      "require": "./dist/server/index.js",
+      "default": "./dist/server/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "strapi",
     "plugins",
@@ -70,9 +97,14 @@
   "homepage": "https://github.com/kwinyyyc/strapi-plugin-wysiwyg-react-md-editor#readme",
   "scripts": {
     "prepack": "yarn build",
-    "develop": "tsc -p tsconfig.server.json -w",
-    "clean": "rimraf dist",
-    "build": "yarn clean && tsc -p tsconfig.server.json"
+    "build": "strapi-plugin build",
+    "test:ts:back": "run -T tsc -p server/tsconfig.json",
+    "test:ts:front": "run -T tsc -p admin/tsconfig.json",
+    "verify": "strapi-plugin verify",
+    "watch": "strapi-plugin watch",
+    "watch:link": "strapi-plugin watch:link",
+    "develop": "yarn watch",
+    "clean": "rimraf dist"
   },
   "license": "MIT"
 }
