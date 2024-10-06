@@ -1,24 +1,23 @@
-import {FC as FunctionComponent} from 'react';
+import { FC as FunctionComponent } from "react";
 
-import {useStrapiApp} from '@strapi/admin/strapi-admin';
-import type {Schema} from '@strapi/types';
-
+import { useStrapiApp } from "@strapi/admin/strapi-admin";
+import type { Schema } from "@strapi/types";
 
 const prefixFileUrlWithBackendUrl = (fileURL: string) => {
   return !!fileURL &&
-    fileURL.startsWith('/') &&
-    'strapi' in window &&
+    fileURL.startsWith("/") &&
+    "strapi" in window &&
     window.strapi instanceof Object &&
-    'backendURL' in window.strapi &&
-    window.strapi.backendURL ?
-    `${window.strapi.backendURL}${fileURL}` :
-    fileURL;
+    "backendURL" in window.strapi &&
+    window.strapi.backendURL
+    ? `${window.strapi.backendURL}${fileURL}`
+    : fileURL;
 };
 
 interface MediaLibComponentProps {
-  isOpen: boolean,
-  onChange: (files: Schema.Attribute.MediaValue<true>) => void,
-  onToggle: () => void,
+  isOpen: boolean;
+  onChange: (files: Schema.Attribute.MediaValue<true>) => void;
+  onToggle: () => void;
 }
 
 const MediaLib: FunctionComponent<MediaLibComponentProps> = ({
@@ -26,12 +25,12 @@ const MediaLib: FunctionComponent<MediaLibComponentProps> = ({
   onChange,
   onToggle,
 }) => {
-  const components = useStrapiApp('ImageDialog', (state) => state.components);
+  const components = useStrapiApp("ImageDialog", (state) => state.components);
   if (!components || !isOpen) return null;
 
-  const MediaLibraryDialog = components['media-library'] as FunctionComponent<{
-    onClose: () => void,
-    onSelectAssets: (_images: Schema.Attribute.MediaValue<true>) => void,
+  const MediaLibraryDialog = components["media-library"] as FunctionComponent<{
+    onClose: () => void;
+    onSelectAssets: (_images: Schema.Attribute.MediaValue<true>) => void;
   }>;
 
   const handleSelectAssets = (files: Schema.Attribute.MediaValue<true>) => {
@@ -58,4 +57,4 @@ MediaLib.defaultProps = {
   onToggle: () => {},
 };
 
-export {MediaLib};
+export { MediaLib };
