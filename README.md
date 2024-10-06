@@ -30,7 +30,7 @@ Default it uses below commands in sequence:
 ]`
 
 You can customize the value in plugins/config.ts file.
-```javascript
+```js
 export default {
     "wysiwyg-react-md-editor": {
         enabled: true,
