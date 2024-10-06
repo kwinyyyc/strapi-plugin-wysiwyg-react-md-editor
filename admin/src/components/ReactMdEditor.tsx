@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useMemo } from "react";
-import PropTypes from "prop-types";
-import MDEditor, { commands } from "@uiw/react-md-editor";
-import MediaLib from "../MediaLib";
-import styled from "styled-components";
-import "@uiw/react-markdown-preview/markdown.css";
-import { Stack } from "@strapi/design-system/Stack";
-import { Box } from "@strapi/design-system/Box";
-import { Typography } from "@strapi/design-system/Typography";
-import { useIntl } from "react-intl";
-import pluginId from "../../pluginId";
-import { ICommand } from "@uiw/react-md-editor";
+import {FC as FunctionComponent, useState, useEffect, useMemo} from 'react';
+
+import {Box, Flex, Typography} from '@strapi/design-system';
+import type {Schema} from '@strapi/types';
+import MDEditor, {commands, ICommand} from '@uiw/react-md-editor';
+import {useIntl} from 'react-intl';
+import {styled} from 'styled-components';
+
+import '@uiw/react-markdown-preview/markdown.css';
+
+import pluginId from '../pluginId';
+import {MediaLib} from './MediaLib';
+
 
 const Wrapper = styled.div`
   > div:nth-child(2) {
@@ -56,7 +57,24 @@ const Wrapper = styled.div`
   }
 `;
 
-const Editor = ({
+interface EditorProps {
+  name: string,
+  onChange: (e: {target: {name: string; value: string}}) => void,
+  value: string,
+  intlLabel: {
+    id: string,
+    defaultMessage: string,
+  },
+  disabled?: boolean,
+  error?: string,
+  description?: {
+    id: string,
+    defaultMessage: string,
+  },
+  required?: boolean,
+}
+
+const Editor: FunctionComponent<EditorProps> = ({
   name,
   onChange,
   value,
@@ -66,26 +84,26 @@ const Editor = ({
   description,
   required,
 }) => {
-  const { formatMessage } = useIntl();
+  const {formatMessage} = useIntl();
   const [mediaLibVisible, setMediaLibVisible] = useState(false);
   const [mediaLibSelection, setMediaLibSelection] = useState(-1);
 
   const handleToggleMediaLib = () => setMediaLibVisible((prev) => !prev);
 
-  const handleChangeAssets = (assets) => {
-    let newValue = value ? value : "";
+  const handleChangeAssets = (assets: Schema.Attribute.MediaValue<true>) => {
+    let newValue = value ? value : '';
     assets.map((asset) => {
-      if (asset.mime.includes("image")) {
+      if (asset.mime.includes('image')) {
         const imgTag = `![${asset.alt}](${asset.url})`;
         if (mediaLibSelection > -1) {
-          const preValue = value?.substring(0, mediaLibSelection) ?? "";
-          const postValue = value?.substring(mediaLibSelection) ?? "";
+          const preValue = value?.substring(0, mediaLibSelection) ?? '';
+          const postValue = value?.substring(mediaLibSelection) ?? '';
           newValue = `${
-            preValue && !preValue.endsWith(" ") ? preValue + " " : preValue
+            preValue && !preValue.endsWith(' ') ? preValue + ' ' : preValue
           }${imgTag}${
-            postValue && !postValue.startsWith(" ")
-              ? " " + postValue
-              : postValue
+            postValue && !postValue.startsWith(' ') ?
+              ' ' + postValue :
+              postValue
           }`;
         } else {
           newValue = `${newValue}${imgTag}`;
@@ -93,26 +111,31 @@ const Editor = ({
       }
       // Handle videos and other type of files by adding some code
     });
-    onChange({ target: { name, value: newValue ?? "" } });
+    onChange({target: {name,
+      value: newValue ?? ''}});
     handleToggleMediaLib();
   };
 
-  const [configs, setConfigs] = useState<{ toolbarCommands?: string[] }>({});
+  const [configs, setConfigs] = useState<{toolbarCommands?: string[]}>({});
 
-  const toolbarCommands: ICommand[] = useMemo(() => {
-    const strapiMediaLibrary = {
-      name: "image",
-      keyCommand: "image",
-      buttonProps: { "aria-label": "Insert title3" },
+  const toolbarCommands = useMemo(() => {
+    const strapiMediaLibrary: ICommand = {
+      name: 'image',
+      keyCommand: 'image',
+      buttonProps: {'aria-label': 'Insert title3'},
       icon: (
-        <svg width="12" height="12" viewBox="0 0 20 20">
+        <svg
+          width='12'
+          height='12'
+          viewBox='0 0 20 20'
+        >
           <path
-            fill="currentColor"
-            d="M15 9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4-7H1c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 13l-6-5-2 2-4-5-4 8V4h16v11z"
+            fill='currentColor'
+            d='M15 9c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4-7H1c-.55 0-1 .45-1 1v14c0 .55.45 1 1 1h18c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 13l-6-5-2 2-4-5-4 8V4h16v11z'
           ></path>
         </svg>
       ),
-      execute: (state, api) => {
+      execute: (state, _api) => {
         setMediaLibSelection(state.selection.end);
         handleToggleMediaLib();
       },
@@ -139,12 +162,18 @@ const Editor = ({
         commands.unorderedListCommand,
         commands.orderedListCommand,
         commands.checkedListCommand,
-      ];
+      ] as ICommand[];
     }
     const customCommands = configs?.toolbarCommands?.map((config) => {
-      if (config === "strapiMediaLibrary") return strapiMediaLibrary;
-      if (commands[config]) return commands[config];
-    });
+      if (config === 'strapiMediaLibrary') return strapiMediaLibrary;
+      if (
+        config in commands &&
+        commands[config as unknown as keyof typeof commands]
+      ) {
+        return commands[config as unknown as keyof typeof commands] as ICommand;
+      };
+    }).filter((command): command is ICommand => command !== undefined);
+
     return customCommands;
   }, [JSON.stringify(configs)]);
 
@@ -157,27 +186,35 @@ const Editor = ({
   }, []);
 
   return (
-    <Stack size={1}>
+    <Flex gap={4}>
       <Box>
-        <Typography variant="pi" fontWeight="bold">
+        <Typography
+          variant='pi'
+          fontWeight='bold'
+        >
           {formatMessage(intlLabel)}
         </Typography>
         {required && (
-          <Typography variant="pi" fontWeight="bold" textColor="danger600">
+          <Typography
+            variant='pi'
+            fontWeight='bold'
+            textColor='danger600'
+          >
             *
           </Typography>
         )}
       </Box>
       <Wrapper>
         <MDEditor
-          disabled={disabled}
+          hidden={disabled}
           commands={toolbarCommands}
-          value={value || ""}
+          value={value || ''}
           onChange={(newValue) => {
-            onChange({ target: { name, value: newValue || "" } });
+            onChange({target: {name,
+              value: newValue || ''}});
           }}
         />
-        <div style={{ padding: "50px 0 0 0" }} />
+        <div style={{padding: '50px 0 0 0'}}/>
         <MediaLib
           isOpen={mediaLibVisible}
           onChange={handleChangeAssets}
@@ -185,21 +222,19 @@ const Editor = ({
         />
       </Wrapper>
       {error && (
-        <Typography variant="pi" textColor="danger600">
-          {formatMessage({ id: error, defaultMessage: error })}
+        <Typography
+          variant='pi'
+          textColor='danger600'
+        >
+          {formatMessage({id: error,
+            defaultMessage: error})}
         </Typography>
       )}
       {description && (
-        <Typography variant="pi">{formatMessage(description)}</Typography>
+        <Typography variant='pi'>{formatMessage(description)}</Typography>
       )}
-    </Stack>
+    </Flex>
   );
 };
 
-Editor.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-};
-
-export default Editor;
+export {Editor};
