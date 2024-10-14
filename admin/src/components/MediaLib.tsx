@@ -1,17 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useStrapiApp } from '@strapi/strapi/admin';
+import prefixFileUrlWithBackendUrl from '../utils/prefixFileUrlWithBackendUrl';
 
-const prefixFileUrlWithBackendUrl = (fileURL: string) => {
-  return !!fileURL &&
-    fileURL.startsWith("/") &&
-    "strapi" in window &&
-    window.strapi instanceof Object &&
-    "backendURL" in window.strapi &&
-    window.strapi.backendURL
-    ? `${window.strapi.backendURL}${fileURL}`
-    : fileURL;
-};
 
 const MediaLib = ( { isOpen = false, onChange = () => {}, onToggle = () => {} } ) => {
   const { components } = useStrapiApp( 'library', app => app );
