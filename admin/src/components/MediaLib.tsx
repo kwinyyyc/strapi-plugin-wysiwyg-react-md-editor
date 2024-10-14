@@ -1,36 +1,49 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { useStrapiApp } from '@strapi/strapi/admin';
 import prefixFileUrlWithBackendUrl from '../utils/prefixFileUrlWithBackendUrl';
+import { useStrapiApp } from '@strapi/strapi/admin';
+import type { Schema } from '@strapi/types';
+
+const MediaLibComponent: React.FC<any> = ({
+  isOpen = false,
+  onChange,
+  onToggle,
+  allowedTypes
+}) => {
+
+  const components = useStrapiApp('ImageDialog', (state) => state.components);
+  if (!components || !isOpen) return null;
+
+  const MediaLibraryDialog = components['media-library']  as React.ComponentType<{
+    allowedTypes?: Schema.Attribute.MediaKind[]; // 'images' | 'videos' | 'files' | 'audios'
+    onClose: () => void;
+    onSelectAssets: (_images: Schema.Attribute.MediaValue<true>) => void;
+  }>;
 
 
-const MediaLib = ( { isOpen = false, onChange = () => {}, onToggle = () => {} } ) => {
-  const { components } = useStrapiApp( 'library', app => app );
-  const MediaLibraryDialog = components[ 'media-library' ];
-
-  const handleSelectAssets = files => {
-    const formattedFiles = files.map(f => ( {
+  const handleSelectAssets = (assets: Schema.Attribute.MediaValue<true>) => {
+    const formattedFiles = assets.map((f) => ({
       alt: f.alternativeText || f.name,
-      url: prefixFileUrlWithBackendUrl( f.url ),
+      url: prefixFileUrlWithBackendUrl(f.url),
       mime: f.mime,
-    } ) );
-
-    onChange( formattedFiles );
+      //width: f.width,
+      //height: f.height,
+      //size: f.size,
+      //formats:f.formats,
+    }));
+    onChange(formattedFiles);
   };
 
-  if ( !isOpen ) {
-    return null
-  };
+  if (!isOpen) {
+    return null;
+  }
 
-  return(
-    <MediaLibraryDialog onClose={ onToggle } onSelectAssets={ handleSelectAssets } />
+  return (
+    <MediaLibraryDialog
+    allowedTypes={allowedTypes}
+    onClose={onToggle}
+    onSelectAssets={handleSelectAssets}
+    />
   );
 };
 
-MediaLib.propTypes = {
-  isOpen: PropTypes.bool,
-  onChange: PropTypes.func,
-  onToggle: PropTypes.func,
-};
-
-export default MediaLib;
+export default MediaLibComponent;

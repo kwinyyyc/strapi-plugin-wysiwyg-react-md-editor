@@ -1,6 +1,6 @@
 import { FC as FunctionComponent, useState, useEffect, useMemo } from "react";
 
-import { Box, Flex, Typography } from "@strapi/design-system";
+import { Flex, Field } from "@strapi/design-system";
 import type { Schema } from "@strapi/types";
 import MDEditor, { commands, ICommand } from "@uiw/react-md-editor";
 import { useIntl } from "react-intl";
@@ -9,7 +9,7 @@ import { styled } from "styled-components";
 import "@uiw/react-markdown-preview/markdown.css";
 
 import {PLUGIN_ID} from '../utils/pluginId';
-import { MediaLib } from "./MediaLib";
+import MediaLib from "./MediaLib";
 import { useField } from "@strapi/strapi/admin";
 
 const Wrapper = styled.div`
@@ -33,6 +33,9 @@ const Wrapper = styled.div`
     flex-direction: column;
     img {
       max-width: 100%;
+    }
+    ul,ol{
+      list-style:inherit;
     }
     .w-md-editor-preview {
       display: block;
@@ -73,15 +76,19 @@ interface EditorProps {
     defaultMessage: string;
   };
   required?: boolean;
+  attribute?: any; // TO FIX
+  labelAction?: React.ReactNode; //TO FIX TO CHECK
 }
 
 const Editor: FunctionComponent<EditorProps> = ({
+  attribute,
   name,
-  intlLabel,
   disabled,
-  error,
-  description,
+  labelAction,
   required,
+  description,
+  error,
+  intlLabel,
 }) => {
   // const { formatMessage } = useIntl();
   const { onChange, value }: any = useField(name);
@@ -94,6 +101,7 @@ const Editor: FunctionComponent<EditorProps> = ({
 
   const handleChangeAssets = (assets: Schema.Attribute.MediaValue<true>) => {
     let newValue = value ? value : "";
+
     assets.map((asset) => {
       if (asset.mime.includes("image")) {
         const imgTag = `![${asset.alt}](${asset.url})`;
@@ -121,9 +129,9 @@ const Editor: FunctionComponent<EditorProps> = ({
 
   const toolbarCommands = useMemo(() => {
     const strapiMediaLibrary: ICommand = {
-      name: "image",
-      keyCommand: "image",
-      buttonProps: { "aria-label": "Insert image" },
+      name: "media",
+      keyCommand: "media",
+      buttonProps: { "aria-label": "Insert media" },
       icon: (
         <svg width="12" height="12" viewBox="0 0 20 20">
           <path
@@ -187,42 +195,36 @@ const Editor: FunctionComponent<EditorProps> = ({
   }, []);
 
   return (
-    <Flex gap={0} style={{ margin: 0, padding: 0 }}>
-      <Box>
-        <Typography variant="pi" fontWeight="bold">
-          {formatMessage(intlLabel)}
-        </Typography>
-        {required && (
-          <Typography variant="pi" fontWeight="bold" textColor="danger600">
-            *
-          </Typography>
-        )}
-      </Box>
-      <Wrapper>
-        <MDEditor
-          hidden={disabled}
-          commands={toolbarCommands}
-          value={value || ""}
-          onChange={(newValue) => {
-            onChange({ target: { name, value: newValue || "" } });
-          }}
-        />
-        <div style={{ padding: "50px 0 0 0" }} />
-        {/* <MediaLib
-          isOpen={mediaLibVisible}
-          onChange={handleChangeAssets}
-          onToggle={handleToggleMediaLib}
-        /> */}
-      </Wrapper>
-      {error && (
-        <Typography variant="pi" textColor="danger600">
-          {formatMessage({ id: error, defaultMessage: error })}
-        </Typography>
-      )}
-      {description && (
-        <Typography variant="pi">{formatMessage(description)}</Typography>
-      )}
-    </Flex>
+    <Field.Root
+      name= {name }
+      id={ name }
+      error={ error }
+      hint={ description && formatMessage( description ) }
+    >
+    <Flex spacing={ 1 } alignItems="normal" style={ { 'flexDirection': 'column' } }>
+      <Field.Label action={ labelAction } required={ required }>
+        { intlLabel ? formatMessage( intlLabel ) : name }
+      </Field.Label>
+        <Wrapper>
+          <MDEditor
+            hidden={disabled}
+            commands={toolbarCommands}
+            value={value || ""}
+            onChange={(newValue) => {
+              onChange({ target: { name, value: newValue || "" } });
+            }}
+          />
+        </Wrapper>
+        <Field.Hint />
+        <Field.Error />
+      </Flex>
+      <MediaLib
+      /*allowedTypes={['images']}*/
+      isOpen={ mediaLibVisible }
+      onChange={ handleChangeAssets }
+      onToggle={ handleToggleMediaLib }
+      />
+    </Field.Root>
   );
 };
 
