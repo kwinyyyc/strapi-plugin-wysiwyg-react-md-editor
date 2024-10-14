@@ -13,6 +13,7 @@ import { MediaLib } from "./MediaLib";
 import { useField } from "@strapi/strapi/admin";
 
 const Wrapper = styled.div`
+  flex-basis: 100%;
   > div:nth-child(2) {
     display: none;
   }
@@ -186,7 +187,7 @@ const Editor: FunctionComponent<EditorProps> = ({
   }, []);
 
   return (
-    <Flex gap={4}>
+    <Flex gap={0} style={{ margin: 0, padding: 0 }}>
       <Box>
         <Typography variant="pi" fontWeight="bold">
           {formatMessage(intlLabel)}
