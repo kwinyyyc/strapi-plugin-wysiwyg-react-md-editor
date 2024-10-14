@@ -11,6 +11,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 import {PLUGIN_ID} from '../utils/pluginId';
 import MediaLib from "./MediaLib";
 import { useField } from "@strapi/strapi/admin";
+import assetsToMarkdown from '../utils/assetsToMarkdown';
 
 const Wrapper = styled.div`
   flex-basis: 100%;
@@ -100,28 +101,10 @@ const Editor: FunctionComponent<EditorProps> = ({
   const handleToggleMediaLib = () => setMediaLibVisible((prev) => !prev);
 
   const handleChangeAssets = (assets: Schema.Attribute.MediaValue<true>) => {
-    let newValue = value ? value : "";
 
-    assets.map((asset) => {
-      if (asset.mime.includes("image")) {
-        const imgTag = `![${asset.alt}](${asset.url})`;
-        if (mediaLibSelection > -1) {
-          const preValue = value?.substring(0, mediaLibSelection) ?? "";
-          const postValue = value?.substring(mediaLibSelection) ?? "";
-          newValue = `${
-            preValue && !preValue.endsWith(" ") ? preValue + " " : preValue
-          }${imgTag}${
-            postValue && !postValue.startsWith(" ")
-              ? " " + postValue
-              : postValue
-          }`;
-        } else {
-          newValue = `${newValue}${imgTag}`;
-        }
-      }
-      // Handle videos and other type of files by adding some code
-    });
-    onChange({ target: { name, value: newValue ?? "" } });
+    const output = value + assetsToMarkdown(assets);
+
+    onChange({ target: { name, value: output} });
     handleToggleMediaLib();
   };
 
