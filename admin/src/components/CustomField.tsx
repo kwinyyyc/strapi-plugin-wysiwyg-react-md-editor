@@ -1,17 +1,15 @@
 import { FC as FunctionComponent, useState, useEffect, useMemo } from "react";
-
 import { Flex, Field } from "@strapi/design-system";
 import type { Schema } from "@strapi/types";
-import MDEditor, { commands, ICommand } from "@uiw/react-md-editor";
+import { commands, ICommand } from "@uiw/react-md-editor";
 import { useIntl } from "react-intl";
 import { styled } from "styled-components";
-
 import "@uiw/react-markdown-preview/markdown.css";
-
-import {PLUGIN_ID} from '../utils/pluginId';
+import { PLUGIN_ID } from '../utils/pluginId';
 import MediaLib from "./MediaLib";
 import { useField } from "@strapi/strapi/admin";
-import assetsToMarkdown from '../utils/assetsToMarkdown';
+import assetsToMarkdown from "../utils/assetsToMarkdown";
+import CustomMDEditor from "./CustomMDEditor";
 
 const Wrapper = styled.div`
   flex-basis: 100%;
@@ -62,7 +60,7 @@ const Wrapper = styled.div`
   }
 `;
 
-interface EditorProps {
+interface FieldProps {
   name: string;
   onChange: (e: { target: { name: string; value: string } }) => void;
   value: string;
@@ -81,7 +79,12 @@ interface EditorProps {
   labelAction?: React.ReactNode; //TO FIX TO CHECK
 }
 
-const Editor: FunctionComponent<EditorProps> = ({
+interface CursorPosition {
+  start: number;
+  end: number;
+}
+
+const CustomField: FunctionComponent<FieldProps> = ({
   attribute,
   name,
   disabled,
@@ -92,26 +95,38 @@ const Editor: FunctionComponent<EditorProps> = ({
   intlLabel,
 }) => {
   // const { formatMessage } = useIntl();
-  const { onChange, value }: any = useField(name);
+  const field: any = useField(name);
+
   const formatMessage = (message: { id: string; defaultMessage: string }) =>
     message?.defaultMessage ?? "";
   const [mediaLibVisible, setMediaLibVisible] = useState(false);
-  const [mediaLibSelection, setMediaLibSelection] = useState(-1);
+  const [cursorPosition, setCursorPosition] = useState<CursorPosition | null>(null);
 
   const handleToggleMediaLib = () => setMediaLibVisible((prev) => !prev);
 
+  const updateFieldValue = (value:any) => {
+    field.onChange({ target: { name, value: value } });
+  }
+
   const handleChangeAssets = (assets: Schema.Attribute.MediaValue<true>) => {
 
-    const output = value + assetsToMarkdown(assets);
+    let output;
+    const assetsString = assetsToMarkdown(assets);
 
-    onChange({ target: { name, value: output} });
+    if (cursorPosition) {
+      output = field.value.slice(0, cursorPosition.start) + assetsString + field.value.slice(cursorPosition.end);
+    }else{
+      output = field.value + assetsString;
+    }
+
+    updateFieldValue(output);
     handleToggleMediaLib();
   };
 
-  const [configs, setConfigs] = useState<{ toolbarCommands?: string[] }>({});
+  const [config, setConfig] = useState<{ toolbarCommands?: string[] }>({});
 
   const toolbarCommands = useMemo(() => {
-    const strapiMediaLibrary: ICommand = {
+    const mediaLibraryButton: ICommand = {
       name: "media",
       keyCommand: "media",
       buttonProps: { "aria-label": "Insert media" },
@@ -124,37 +139,19 @@ const Editor: FunctionComponent<EditorProps> = ({
         </svg>
       ),
       execute: (state, _api) => {
-        setMediaLibSelection(state.selection.end);
+        setCursorPosition(state.selection);
         handleToggleMediaLib();
       },
     };
-    if (!configs?.toolbarCommands) {
-      return [
-        commands.title2,
-        commands.title3,
-        commands.title4,
-        commands.title5,
-        commands.title6,
+    if (!config?.toolbarCommands) {
+      return [...commands.getCommands(),
         commands.divider,
-        commands.bold,
-        commands.codeBlock,
-        commands.italic,
-        commands.strikethrough,
-        commands.hr,
-        commands.group,
-        commands.divider,
-        commands.link,
-        commands.quote,
-        commands.code,
-        strapiMediaLibrary,
-        commands.unorderedListCommand,
-        commands.orderedListCommand,
-        commands.checkedListCommand,
+        mediaLibraryButton
       ] as ICommand[];
     }
-    const customCommands = configs?.toolbarCommands
+    const customCommands = config?.toolbarCommands
       ?.map((config) => {
-        if (config === "strapiMediaLibrary") return strapiMediaLibrary;
+        if (config === "mediaLibraryButton") return mediaLibraryButton;
         if (
           config in commands &&
           commands[config as unknown as keyof typeof commands]
@@ -167,48 +164,46 @@ const Editor: FunctionComponent<EditorProps> = ({
       .filter((command): command is ICommand => command !== undefined);
 
     return customCommands;
-  }, [JSON.stringify(configs)]);
+  }, [JSON.stringify(config)]);
 
   useEffect(() => {
     fetch(`/${PLUGIN_ID}`)
       .then((response) => response.json())
       .then((data) => {
-        setConfigs(data);
+        setConfig(data);
       });
   }, []);
 
   return (
     <Field.Root
-      name= {name }
-      id={ name }
-      error={ error }
-      hint={ description && formatMessage( description ) }
+      name={name}
+      id={name}
+      error={error}
+      hint={description && formatMessage(description)}
     >
-    <Flex spacing={ 1 } alignItems="normal" style={ { 'flexDirection': 'column' } }>
-      <Field.Label action={ labelAction } required={ required }>
-        { intlLabel ? formatMessage( intlLabel ) : name }
-      </Field.Label>
+      <Flex spacing={1} alignItems="normal" style={{ flexDirection: "column" }}>
+        <Field.Label action={labelAction} required={required}>
+          {intlLabel ? formatMessage(intlLabel) : name}
+        </Field.Label>
         <Wrapper>
-          <MDEditor
+          <CustomMDEditor
             hidden={disabled}
+            value={field.value}
+            onChange={updateFieldValue}
             commands={toolbarCommands}
-            value={value || ""}
-            onChange={(newValue) => {
-              onChange({ target: { name, value: newValue || "" } });
-            }}
           />
         </Wrapper>
         <Field.Hint />
         <Field.Error />
       </Flex>
       <MediaLib
-      /*allowedTypes={['images']}*/
-      isOpen={ mediaLibVisible }
-      onChange={ handleChangeAssets }
-      onToggle={ handleToggleMediaLib }
+        /*allowedTypes={['images']}*/
+        isOpen={mediaLibVisible}
+        onChange={handleChangeAssets}
+        onToggle={handleToggleMediaLib}
       />
     </Field.Root>
   );
 };
 
-export { Editor };
+export { CustomField };
