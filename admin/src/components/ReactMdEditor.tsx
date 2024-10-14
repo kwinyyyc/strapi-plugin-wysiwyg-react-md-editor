@@ -123,7 +123,7 @@ const Editor: FunctionComponent<EditorProps> = ({
     const strapiMediaLibrary: ICommand = {
       name: "image",
       keyCommand: "image",
-      buttonProps: { "aria-label": "Insert title3" },
+      buttonProps: { "aria-label": "Insert image" },
       icon: (
         <svg width="12" height="12" viewBox="0 0 20 20">
           <path
