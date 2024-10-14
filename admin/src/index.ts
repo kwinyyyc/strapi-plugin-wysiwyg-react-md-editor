@@ -1,5 +1,5 @@
 import pluginPkg from "../../package.json";
-import pluginId from "./pluginId";
+import {PLUGIN_ID} from './utils/pluginId';
 import { Initializer } from "./components/Initializer";
 import { Editor as ReactMdEditor } from "./components/ReactMdEditor";
 import { getTranslation } from "./utils/getTranslation";
@@ -10,7 +10,7 @@ export default {
   register(app: any) {
     app.addFields({ type: "richtext", Component: ReactMdEditor });
     const plugin = {
-      id: pluginId,
+      id: PLUGIN_ID,
       initializer: Initializer,
       isReady: false,
       name,

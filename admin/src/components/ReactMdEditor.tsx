@@ -8,7 +8,7 @@ import { styled } from "styled-components";
 
 import "@uiw/react-markdown-preview/markdown.css";
 
-import pluginId from "../pluginId";
+import {PLUGIN_ID} from '../utils/pluginId';
 import { MediaLib } from "./MediaLib";
 import { useField } from "@strapi/strapi/admin";
 
@@ -179,7 +179,7 @@ const Editor: FunctionComponent<EditorProps> = ({
   }, [JSON.stringify(configs)]);
 
   useEffect(() => {
-    fetch(`/${pluginId}`)
+    fetch(`/${PLUGIN_ID}`)
       .then((response) => response.json())
       .then((data) => {
         setConfigs(data);
