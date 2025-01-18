@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-wysiwyg-react-md-editor",
-  "version": "5.0.2",
+  "version": "5.8.0",
   "description": "Replaces the default Strapi WYSIWYG editor with react md editor.",
   "keywords": [
     "strapi",
@@ -44,6 +44,10 @@
     {
       "name": "Oscar Martin Glez-Chavez",
       "url": "https://github.com/omartin9203"
+    },
+    {
+      "name": "gordielachance",
+      "url": "https://github.com/gordielachance"
     }
   ],
   "type": "commonjs",

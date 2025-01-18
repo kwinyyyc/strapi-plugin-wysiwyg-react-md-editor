@@ -1,16 +1,16 @@
 import pluginPkg from "../../package.json";
-import pluginId from "./pluginId";
+import {PLUGIN_ID} from './utils/pluginId';
 import { Initializer } from "./components/Initializer";
-import { Editor as ReactMdEditor } from "./components/ReactMdEditor";
+import { CustomField } from "./components/CustomField";
 import { getTranslation } from "./utils/getTranslation";
 
 const name = pluginPkg.strapi.name;
 
 export default {
   register(app: any) {
-    app.addFields({ type: "richtext", Component: ReactMdEditor });
+    app.addFields({ type: "richtext", Component: CustomField });
     const plugin = {
-      id: pluginId,
+      id: PLUGIN_ID,
       initializer: Initializer,
       isReady: false,
       name,
