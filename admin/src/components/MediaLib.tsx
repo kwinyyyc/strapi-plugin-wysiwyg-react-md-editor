@@ -1,24 +1,24 @@
-import React from 'react';
-import prefixFileUrlWithBackendUrl from '../utils/prefixFileUrlWithBackendUrl';
-import { useStrapiApp } from '@strapi/strapi/admin';
-import type { Schema } from '@strapi/types';
+import React from "react";
+import prefixFileUrlWithBackendUrl from "../utils/prefixFileUrlWithBackendUrl";
+import { useStrapiApp } from "@strapi/strapi/admin";
+import type { Schema } from "@strapi/types";
 
 const MediaLibComponent: React.FC<any> = ({
   isOpen = false,
   onChange,
   onToggle,
-  allowedTypes
+  allowedTypes,
 }) => {
-
-  const components = useStrapiApp('ImageDialog', (state) => state.components);
+  const components = useStrapiApp("ImageDialog", (state) => state.components);
   if (!components || !isOpen) return null;
 
-  const MediaLibraryDialog = components['media-library']  as React.ComponentType<{
+  const MediaLibraryDialog: any = components[
+    "media-library"
+  ] as React.ComponentType<{
     allowedTypes?: Schema.Attribute.MediaKind[]; // 'images' | 'videos' | 'files' | 'audios'
     onClose: () => void;
     onSelectAssets: (_images: Schema.Attribute.MediaValue<true>) => void;
   }>;
-
 
   const handleSelectAssets = (assets: Schema.Attribute.MediaValue<true>) => {
     const formattedFiles = assets.map((f) => ({
@@ -39,9 +39,9 @@ const MediaLibComponent: React.FC<any> = ({
 
   return (
     <MediaLibraryDialog
-    allowedTypes={allowedTypes}
-    onClose={onToggle}
-    onSelectAssets={handleSelectAssets}
+      allowedTypes={allowedTypes}
+      onClose={onToggle}
+      onSelectAssets={handleSelectAssets}
     />
   );
 };
