@@ -5,7 +5,7 @@ import { commands, ICommand } from "@uiw/react-md-editor";
 import { useIntl } from "react-intl";
 import { styled } from "styled-components";
 import "@uiw/react-markdown-preview/markdown.css";
-import { PLUGIN_ID } from '../utils/pluginId';
+import { PLUGIN_ID } from "../utils/pluginId";
 import MediaLib from "./MediaLib";
 import { useField } from "@strapi/strapi/admin";
 import assetsToMarkdown from "../utils/assetsToMarkdown";
@@ -20,6 +20,13 @@ const Wrapper = styled.div`
     display: none;
   }
   .w-md-editor {
+    code[class*="language-"],
+    pre[class*="language-"] {
+      color: inherit;
+    }
+    .w-md-editor-text-pre {
+      padding: 0;
+    }
     border: 1px solid #dcdce4;
     border-radius: 4px;
     box-shadow: none;
@@ -33,8 +40,9 @@ const Wrapper = styled.div`
     img {
       max-width: 100%;
     }
-    ul,ol{
-      list-style:inherit;
+    ul,
+    ol {
+      list-style: inherit;
     }
     .w-md-editor-preview {
       display: block;
@@ -100,22 +108,26 @@ const CustomField: FunctionComponent<FieldProps> = ({
   const formatMessage = (message: { id: string; defaultMessage: string }) =>
     message?.defaultMessage ?? "";
   const [mediaLibVisible, setMediaLibVisible] = useState(false);
-  const [cursorPosition, setCursorPosition] = useState<CursorPosition | null>(null);
+  const [cursorPosition, setCursorPosition] = useState<CursorPosition | null>(
+    null
+  );
 
   const handleToggleMediaLib = () => setMediaLibVisible((prev) => !prev);
 
-  const updateFieldValue = (value:any) => {
+  const updateFieldValue = (value: any) => {
     field.onChange({ target: { name, value: value } });
-  }
+  };
 
   const handleChangeAssets = (assets: Schema.Attribute.MediaValue<true>) => {
-
     let output;
     const assetsString = assetsToMarkdown(assets);
 
     if (cursorPosition) {
-      output = field.value.slice(0, cursorPosition.start) + assetsString + field.value.slice(cursorPosition.end);
-    }else{
+      output =
+        field.value.slice(0, cursorPosition.start) +
+        assetsString +
+        field.value.slice(cursorPosition.end);
+    } else {
       output = field.value + assetsString;
     }
 
@@ -144,9 +156,10 @@ const CustomField: FunctionComponent<FieldProps> = ({
       },
     };
     if (!config?.toolbarCommands) {
-      return [...commands.getCommands(),
+      return [
+        ...commands.getCommands(),
         commands.divider,
-        mediaLibraryButton
+        mediaLibraryButton,
       ] as ICommand[];
     }
     const customCommands = config?.toolbarCommands
