@@ -1,10 +1,11 @@
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
 import { FC as FunctionComponent, useState, useEffect, useMemo } from "react";
 import { Flex, Field } from "@strapi/design-system";
 import type { Schema } from "@strapi/types";
 import { commands, ICommand } from "@uiw/react-md-editor";
 import { useIntl } from "react-intl";
 import { styled } from "styled-components";
-import "@uiw/react-markdown-preview/markdown.css";
 import { PLUGIN_ID } from "../utils/pluginId";
 import MediaLib from "./MediaLib";
 import { useField } from "@strapi/strapi/admin";

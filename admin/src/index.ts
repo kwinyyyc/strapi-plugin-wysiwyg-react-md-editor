@@ -1,22 +1,30 @@
 import pluginPkg from "../../package.json";
-import {PLUGIN_ID} from './utils/pluginId';
+import { PLUGIN_ID } from "./utils/pluginId";
 import { Initializer } from "./components/Initializer";
 import { CustomField } from "./components/CustomField";
+
 import { getTranslation } from "./utils/getTranslation";
 
 const name = pluginPkg.strapi.name;
 
 export default {
   register(app: any) {
-    app.addFields({ type: "richtext", Component: CustomField });
-    const plugin = {
-      id: PLUGIN_ID,
-      initializer: Initializer,
-      isReady: false,
+    app.customFields.register({
       name,
-    };
-
-    app.registerPlugin(plugin);
+      type: "richtext",
+      pluginId: PLUGIN_ID,
+      intlLabel: {
+        id: `${PLUGIN_ID}.label`,
+        defaultMessage: PLUGIN_ID,
+      },
+      intlDescription: {
+        id: `${PLUGIN_ID}.description`,
+        defaultMessage: "The markdown text editor for every use case",
+      },
+      components: {
+        Input: async () => await import("./components/CustomField"),
+      },
+    });
   },
   async registerTrads({ locales }: any) {
     const importedTrads = await Promise.all(
